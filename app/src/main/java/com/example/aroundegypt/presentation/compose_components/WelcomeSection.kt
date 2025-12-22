@@ -23,7 +23,7 @@ fun WelcomeSection() {
 
         Text(
             text = "Now you can explore any experience in 360 degrees and get all the details about it all in one place.",
-            color = Color.Gray,
+            color = Color.Black,
             fontSize = 14.sp
         )
     }
