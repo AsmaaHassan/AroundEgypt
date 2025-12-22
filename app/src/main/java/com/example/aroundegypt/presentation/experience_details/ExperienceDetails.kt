@@ -53,6 +53,7 @@ fun ExperienceDetails(viewModel: HomeViewModel) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .background(Color.White)
                 .verticalScroll(rememberScrollState())
         ) {
 
@@ -161,7 +162,7 @@ fun ContentSection(data: Experience, onClickLike: () -> Unit) {
                 )
                 Text(
                     text = "Location",
-                    color = Color.Gray,
+//                    color = Color.Gray,
                     fontSize = 14.sp
                 )
             }
@@ -196,7 +197,7 @@ fun ContentSection(data: Experience, onClickLike: () -> Unit) {
 
         Text(
             text = data.description,
-            color = Color.DarkGray,
+//            color = Color.DarkGray,
             fontSize = 14.sp,
             lineHeight = 20.sp
         )
