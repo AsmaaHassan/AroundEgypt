@@ -1,6 +1,5 @@
 package com.example.aroundegypt.presentation.home.compose_components
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -26,6 +25,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.example.aroundegypt.R
 import com.example.aroundegypt.domain.model.Experience
 
 /**
@@ -44,22 +44,13 @@ fun RecentExperienceItem(experience: Experience, onClick: (String) -> Unit
                 model = experience.coverPhoto,
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
+                error = painterResource(id = R.drawable.placeholder), // Fallback image
+                placeholder = painterResource(id = R.drawable.placeholder),
                 modifier = Modifier
                     .height(180.dp)
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(16.dp))
             )
-
-//            if (experience.is360) {
-//                Box(
-//                    modifier = Modifier
-//                        .align(Alignment.Center)
-//                        .background(Color.Black.copy(alpha = 0.6f), CircleShape)
-//                        .padding(10.dp)
-//                ) {
-//                    Text("360", color = Color.White)
-//                }
-//            }
 
             Icon(
                 imageVector = Icons.Default.Info,

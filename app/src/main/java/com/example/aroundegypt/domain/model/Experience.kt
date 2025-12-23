@@ -5,4 +5,12 @@ package com.example.aroundegypt.domain.model
  * Trufla Technology,
  * Cairo, Egypt.
  */
-data class Experience(val id:String,val title:String,var likesNumber:Int, val coverPhoto:String, val location: String,val description: String, var isLiked: Boolean)
+data class Experience(
+    val id: String,
+    val title: String,
+    var likesNumber: Int,
+    val coverPhoto: String,
+    val location: String,
+    val description: String,
+    var isLiked: Boolean
+)

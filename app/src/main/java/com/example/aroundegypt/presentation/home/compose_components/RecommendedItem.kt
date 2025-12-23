@@ -27,6 +27,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.example.aroundegypt.R
 import com.example.aroundegypt.domain.model.Experience
 
 /**
@@ -47,22 +48,13 @@ fun RecommendedItem(experience: Experience, onClickItem: (String) -> Unit) {
                 model = experience.coverPhoto,
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
+                error = painterResource(id = R.drawable.placeholder), // Fallback image
+                placeholder = painterResource(id = R.drawable.placeholder),
                 modifier = Modifier
                     .height(140.dp)
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(16.dp))
             )
-
-//            if (experience.is360) {
-//                Box(
-//                    modifier = Modifier
-//                        .align(Alignment.Center)
-//                        .background(Color.Black.copy(alpha = 0.6f), CircleShape)
-//                        .padding(8.dp)
-//                ) {
-//                    Text("360", color = Color.White)
-//                }
-//            }
         }
 
         Spacer(modifier = Modifier.height(8.dp))

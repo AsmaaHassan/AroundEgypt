@@ -1,6 +1,9 @@
 package com.example.github.di
 
-
+import android.content.Context
+import androidx.room.Room
+import com.example.aroundegypt.data.datasources.local.AppDatabase
+import com.example.aroundegypt.data.datasources.local.dao.ExperienceDao
 import com.example.aroundegypt.domain.usecase.GetRecentExpUseCase
 import com.example.aroundegypt.domain.usecase.LikeExperienceUseCase
 import com.example.aroundegypt.domain.usecase.SearchExperienceUseCase
@@ -13,6 +16,7 @@ import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -26,9 +30,8 @@ import javax.inject.Singleton
  * Cairo, Egypt.
  */
 
-
 @Module
-@InstallIn(SingletonComponent::class) // This ensures the module lives as long as the application
+@InstallIn(SingletonComponent::class)
 object AppModule {
 
     @Provides @Singleton
@@ -49,8 +52,20 @@ object AppModule {
             .create(ExperienceApi::class.java)
 
     @Provides @Singleton
-    fun provideRepository(api: ExperienceApi): ExperienceRepository =
-        ExperienceRepositoryImpl(api)
+    fun provideDatabase(@ApplicationContext context: Context): AppDatabase =
+        Room.databaseBuilder(
+            context,
+            AppDatabase::class.java,
+            "around_egypt_db"
+        ).build()
+
+    @Provides @Singleton
+    fun provideExperienceDao(database: AppDatabase): ExperienceDao =
+        database.experienceDao()
+
+    @Provides @Singleton
+    fun provideRepository(api: ExperienceApi, dao: ExperienceDao): ExperienceRepository =
+        ExperienceRepositoryImpl(api, dao)
 
     @Provides @Singleton
     fun provideUseCases(repo: ExperienceRepository) = UseCases(
@@ -58,13 +73,11 @@ object AppModule {
         getRecentExpUseCase = GetRecentExpUseCase(repo),
         searchExperienceUseCase = SearchExperienceUseCase(repo),
         likeExperience = LikeExperienceUseCase(repo)
-
     )
 
     @Provides
     @Singleton
-    fun provideOkHttp(logging: HttpLoggingInterceptor
-    ): OkHttpClient {
+    fun provideOkHttp(logging: HttpLoggingInterceptor): OkHttpClient {
         return OkHttpClient.Builder()
             .addInterceptor { chain ->
                 val request = chain.request().newBuilder()
@@ -75,17 +88,6 @@ object AppModule {
             .addInterceptor(logging)
             .build()
     }
-
-    @Provides
-    @Singleton
-    fun provideRetrofit(okHttp: OkHttpClient, moshi: Moshi): Retrofit =
-        Retrofit.Builder()
-            .baseUrl("https://github.com/")
-            .client(okHttp)
-            .addConverterFactory(MoshiConverterFactory.create(moshi))
-            .build()
-
-
 }
 
 data class UseCases(

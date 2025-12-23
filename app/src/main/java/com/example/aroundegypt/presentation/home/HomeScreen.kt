@@ -117,6 +117,12 @@ class Home(val viewModel: HomeViewModel, val navController: NavHostController) :
                 SectionTitle("Most Recent")
             }
             when (recentState) {
+                is  RecentExpUiState.Loading -> {
+                    item {
+                        CircularProgressIndicator()
+                    }
+                }
+
                 is RecentExpUiState.Success -> {
                     items(recentState.data) { experience ->
                         RecentExperienceItem(experience) {
