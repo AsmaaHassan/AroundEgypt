@@ -20,13 +20,21 @@ import com.example.aroundegypt.presentation.home.compose_components.RecentExperi
 import com.example.aroundegypt.presentation.home.compose_components.RecommendedItem
 
 /**
+ * Home screen controller that manages the UI state and user interactions for the Around Egypt home page.
+ * 
  * Created by AsmaaHassan on 16,November,2025
  * Trufla Technology,
  * Cairo, Egypt.
+ * 
+ * @property viewModel The [HomeViewModel] handling the business logic and state.
+ * @property navController The [NavHostController] for navigating between screens.
  */
-
 class Home(val viewModel: HomeViewModel, val navController: NavHostController) : IExperienceActions {
 
+    /**
+     * Main Composable entry point for the Home screen.
+     * Observes the search state and toggles between the default home content and search results.
+     */
     @Composable
     fun HomeScreen() {
         val isSearchActive by viewModel.isSearchActive.collectAsState()
@@ -42,14 +50,16 @@ class Home(val viewModel: HomeViewModel, val navController: NavHostController) :
             if (isSearchActive) {
                 SearchResultContent(viewModel.searchState)
             } else {
-
                 HomeContent(viewModel)
-
-
             }
         }
     }
 
+    /**
+     * Displays a vertical list of experiences that match the search criteria.
+     * 
+     * @param searchState The UI state containing the list of found experiences.
+     */
     @Composable
     fun SearchResultContent(searchState: RecentExpUiState) {
         LazyColumn() {
@@ -62,13 +72,20 @@ class Home(val viewModel: HomeViewModel, val navController: NavHostController) :
                         Spacer(modifier = Modifier.height(12.dp))
                     }
                 }
-
                 else -> {}
             }
         }
     }
 
 
+    /**
+     * Displays the primary home content including:
+     * - Welcome section
+     * - Horizontal list of Recommended Experiences
+     * - Vertical list of Most Recent Experiences
+     * 
+     * @param viewModel The view model used to trigger data loading and manage state.
+     */
     @Composable
     fun HomeContent(viewModel: HomeViewModel) {
         val recentState = viewModel.recentState
@@ -97,7 +114,6 @@ class Home(val viewModel: HomeViewModel, val navController: NavHostController) :
                     RecommendedExpUiState.Loading -> CircularProgressIndicator()
                     RecommendedExpUiState.Error -> Text("Something went wrong")
                     is RecommendedExpUiState.Success -> {
-                        //  RecommendedList(recommendedState.data)
                         LazyRow {
                             items(recommendedState.data) { experience ->
                                 RecommendedItem(experience) {
@@ -137,17 +153,37 @@ class Home(val viewModel: HomeViewModel, val navController: NavHostController) :
         }
     }
 
+    /**
+     * Navigates to the experience details screen when an experience is selected.
+     * 
+     * @param experience The [Experience] model that was clicked.
+     */
     override fun onClickExperience(experience: Experience) {
-        viewModel.selectExperience(experience)   // store object
+        viewModel.selectExperience(experience)
         navController.navigate("experience_details")
     }
 
+    /**
+     * Placeholder implementation for liking an experience from the home screen.
+     * 
+     * @param experienceId The unique identifier of the experience to be liked.
+     */
     override fun likeExperience(experienceId: String) {
-        TODO("Not yet implemented")
+        // TODO: Implement like action from home screen if needed
     }
 }
 
+/**
+ * Defines the contract for user interactions with experience items across the application.
+ */
 interface IExperienceActions {
+    /**
+     * Callback triggered when an experience is clicked.
+     */
     fun onClickExperience(experience: Experience)
+    
+    /**
+     * Callback triggered when a like action is performed on an experience.
+     */
     fun likeExperience(experienceId: String)
 }
